@@ -1,3 +1,5 @@
+#include <TimerOne.h>
+
 //== Input Pins ==
 byte rollButton = A5;
 byte upButton = A4;
@@ -16,7 +18,8 @@ byte segmentE = 8;
 byte segmentF = 7;
 byte segmentG = 6;
 
-byte bitMap[] = {segmentA,segmentB,segmentC,segmentD,segmentE,segmentF,segmentG};
+byte digitMap[] = {digit0, digit1, digit2, digit3};
+byte segmentMap[] = {segmentA, segmentB, segmentC, segmentD, segmentE, segmentF, segmentG};
 
 byte charMap[] = {
   B11111100, // 0
@@ -30,6 +33,9 @@ byte charMap[] = {
   B11111110, // 8
   B11110110, // 9
 };
+
+volatile unsigned long curValue = 0;
+volatile byte curDigitIndex = 0;
 
 void SetupInputs() {
   pinMode(rollButton, INPUT_PULLUP);
@@ -52,59 +58,43 @@ void SetupOutputs() {
   pinMode(segmentG, OUTPUT);
 }
 
-void Flash(byte segmentPin) {
-  digitalWrite(segmentPin, LOW);
-  delay(200);
-  digitalWrite(segmentPin, HIGH);
-}
-
-void FlashAtoG(byte digitPin) {
-  digitalWrite(digitPin, HIGH);
-  
-  Flash(segmentA);
-  Flash(segmentB);
-  Flash(segmentC);
-  Flash(segmentD);
-  Flash(segmentE);
-  Flash(segmentF);
-  Flash(segmentG);
-  
-  digitalWrite(digitPin, LOW);
-}
-
-void Test7Seg() {
-  FlashAtoG(digit0);
-  FlashAtoG(digit1);
-  FlashAtoG(digit2);
-  FlashAtoG(digit3);
-}
-
-void TestDigit(byte digitPin, byte value) {
-  digitalWrite(digitPin, HIGH);
-
-  for (byte bitIndex=0; bitIndex<7; bitIndex++) { // Note that we only use bits 0-6, NOT 0-7
-    digitalWrite( bitMap[bitIndex], !bitRead(charMap[value], 7-bitIndex) );
-  }
-  
-  delay(300);
-  digitalWrite(digitPin, LOW);
-}
-
-void TestDigits(byte digitPin) {
-  for (byte value=0; value<10; value++) {
-    TestDigit(digitPin, value);
+void DrawDigit(byte value) {
+  for (byte bitIndex = 0; bitIndex < 7; bitIndex++) { // Note that we only use bits 0-6, NOT 0-7
+    digitalWrite( segmentMap[bitIndex], !bitRead(charMap[value], 7 - bitIndex) );
   }
 }
 
+void RefreshDigit() {
+  // Note that curDigitIndex zero is rightmost on the display (least significant digit)
+  digitalWrite(digitMap[curDigitIndex], LOW); // Turn off previous digit
+  
+  curDigitIndex++ ;// What's the next digit?
+  if (curDigitIndex > 3) curDigitIndex = 0; // Cycle back to zero if we're about to go beyond the four digits of our display
+  
+  String curValueStr = "0000" + String(curValue); // Left pad with zeroes, to make sure we're at least 4 digits
+  int digitValue = curValueStr.charAt( curValueStr.length()-1-curDigitIndex) - '0'; // What's the value of digit at position curDigitIndex?
+  DrawDigit(digitValue); // Draw value at curDigitIndex
+  
+  digitalWrite(digitMap[curDigitIndex], HIGH); // Turn ON current digit
+}
+
+void CountUpTest() {
+  for (int i = 0; i < 10000; i++) {
+    noInterrupts();
+    curValue = i;
+    interrupts();
+    delay(10);
+  }
+}
 void setup() {
   SetupInputs();
   SetupOutputs();
+
+  //-- Setup Timer --
+  Timer1.initialize(4000); // in microseconds
+  Timer1.attachInterrupt(RefreshDigit);
 }
 
 void loop() {
-  //Test7Seg();
-  TestDigits(digit0);
-  TestDigits(digit1);
-  TestDigits(digit2);
-  TestDigits(digit3);
+  CountUpTest();
 }
