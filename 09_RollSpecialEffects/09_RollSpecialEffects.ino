@@ -37,6 +37,8 @@ byte charMap[] = {
   B11110110, // 9
 };
 
+byte beeper = A0;
+
 //volatile unsigned long curValue = 0;
 volatile String curValueStr = "0000";
 volatile byte curDigitIndex = 0;
@@ -47,7 +49,7 @@ unsigned long startingDeceleration = 1;
 unsigned long actionDelay = 0;
 unsigned long decelerationRate = 0;
 bool goingUp;
-    
+
 void SetupInputs() {
   pinMode(rollButton, INPUT_PULLUP);
   pinMode(upButton, INPUT_PULLUP);
@@ -67,6 +69,8 @@ void SetupOutputs() {
   pinMode(segmentE, OUTPUT);
   pinMode(segmentF, OUTPUT);
   pinMode(segmentG, OUTPUT);
+
+  pinMode(beeper, OUTPUT);   digitalWrite(beeper, HIGH);
 }
 
 void DrawDigit(byte value) {
@@ -100,17 +104,24 @@ void setup() {
 }
 
 void AnimateDiceRoll(byte value) {
+
   for (byte i = 0; i < 4; i++) {
-    String digits = "0000"; // Remember zeroes are displayed as blanks
-    int index = (goingUp) ? 3-i : i;
+    String digits = "0000"; // Remember, zeroes are displayed as blanks
+    int index = (goingUp) ? 3 - i : i;
     byte value = random(1, 7); // Pick a new number
     digits[index] = '0' + value;
     noInterrupts();
-    curValueStr= digits;
+    curValueStr = digits;
     interrupts();
+
     delay(actionDelay);
   }
   goingUp = !goingUp;
+
+  //-- Sound effect --
+  digitalWrite(beeper, LOW); // beep
+  delay(50);
+  digitalWrite(beeper, HIGH); // Be quiet
 }
 
 void loop() {
@@ -126,5 +137,6 @@ void loop() {
       actionDelay += decelerationRate;  // keep increasing actionDelay
       decelerationRate += 2;
     }
+    digitalWrite(beeper, HIGH); // Be quiet
   }
 }
