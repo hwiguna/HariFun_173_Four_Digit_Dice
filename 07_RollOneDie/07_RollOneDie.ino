@@ -1,3 +1,6 @@
+// Roll one dice immediately, don't worry about the roll effect yet
+// Hari Wiguna, 2019
+
 #include <TimerOne.h>
 
 //== Input Pins ==
@@ -86,6 +89,11 @@ void CountUpTest() {
     delay(10);
   }
 }
+
+void RollOneDie() {
+  
+}
+
 void setup() {
   SetupInputs();
   SetupOutputs();
@@ -96,5 +104,10 @@ void setup() {
 }
 
 void loop() {
-  CountUpTest();
+  if (digitalRead(rollButton) == LOW) {
+    noInterrupts();
+    curValue = random(1, 7);
+    interrupts();
+    delay(300); // ignore button bounce
+  }
 }

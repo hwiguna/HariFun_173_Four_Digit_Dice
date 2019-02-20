@@ -1,10 +1,12 @@
-// I wrote this to tweak the wheel of fortune style slow down rate.
+// Same as BlinkSlowdown, but using millis instead of delay.
+// Turned out this is unnecessary for my purpose, I use interrupt to refresh the display instead.
+// Hari Wiguna, 2019
 
 unsigned long startingSpeed = 30;
 unsigned long startingDeceleration = 1;
 unsigned long actionDelay = 0;
 unsigned long decelerationRate = 0;
-byte rollPin = 2;
+byte rollPin = A5;
 
 #define IS_IDLE 0
 #define IS_PRESSED 1
