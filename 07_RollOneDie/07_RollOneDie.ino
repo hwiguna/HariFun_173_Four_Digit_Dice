@@ -101,6 +101,8 @@ void setup() {
   //-- Setup Timer --
   Timer1.initialize(4000); // in microseconds
   Timer1.attachInterrupt(RefreshDigit);
+
+  randomSeed(analogRead(0)); // Always start with a new seed at boot up
 }
 
 void loop() {

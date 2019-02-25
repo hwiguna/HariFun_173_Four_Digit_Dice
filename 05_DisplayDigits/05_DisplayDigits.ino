@@ -55,33 +55,6 @@ void SetupOutputs() {
   pinMode(segmentG, OUTPUT);
 }
 
-void Flash(byte segmentPin) {
-  digitalWrite(segmentPin, LOW);
-  delay(200);
-  digitalWrite(segmentPin, HIGH);
-}
-
-void FlashAtoG(byte digitPin) {
-  digitalWrite(digitPin, HIGH);
-  
-  Flash(segmentA);
-  Flash(segmentB);
-  Flash(segmentC);
-  Flash(segmentD);
-  Flash(segmentE);
-  Flash(segmentF);
-  Flash(segmentG);
-  
-  digitalWrite(digitPin, LOW);
-}
-
-void Test7Seg() {
-  FlashAtoG(digit0);
-  FlashAtoG(digit1);
-  FlashAtoG(digit2);
-  FlashAtoG(digit3);
-}
-
 void TestDigit(byte digitPin, byte value) {
   digitalWrite(digitPin, HIGH);
 

@@ -87,19 +87,6 @@ void RefreshDigit() {
   digitalWrite(digitMap[curDigitIndex], HIGH); // Turn ON current digit
 }
 
-void CountUpTest() {
-  for (int i = 0; i < 10000; i++) {
-    noInterrupts();
-    curValue = i;
-    interrupts();
-    delay(10);
-  }
-}
-
-void RollOneDie() {
-  
-}
-
 void setup() {
   SetupInputs();
   SetupOutputs();
@@ -107,6 +94,8 @@ void setup() {
   //-- Setup Timer --
   Timer1.initialize(4000); // in microseconds
   Timer1.attachInterrupt(RefreshDigit);
+
+  randomSeed(analogRead(0)); // Always start with a new seed at boot up
 }
 
 void loop() {

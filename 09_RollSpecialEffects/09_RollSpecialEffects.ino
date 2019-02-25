@@ -86,7 +86,6 @@ void RefreshDigit() {
   curDigitIndex++ ;// What's the next digit?
   if (curDigitIndex > 3) curDigitIndex = 0; // Cycle back to zero if we're about to go beyond the four digits of our display
 
-  //String curValueStr = "0000" + String(curValue); // Left pad with zeroes, to make sure we're at least 4 digits
   int digitValue = curValueStr.charAt( curValueStr.length() - 1 - curDigitIndex) - '0'; // What's the value of digit at position curDigitIndex?
   DrawDigit(digitValue); // Draw value at curDigitIndex
 
@@ -127,7 +126,7 @@ void AnimateDiceRoll(byte value) {
 void loop() {
   if (digitalRead(rollButton) == HIGH) {
     actionDelay = startingSpeed;
-    while (actionDelay < 200) {
+    while (actionDelay < 150) {
       if (digitalRead(rollButton) == HIGH) {
         actionDelay = startingSpeed;
         decelerationRate = startingDeceleration;
