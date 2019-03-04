@@ -4,8 +4,6 @@
 
 //== Input Pins ==
 byte rollButton = A5;
-byte upButton = A4;
-byte downButton = A3;
 
 //== Four-digit 7-Segment Display ==
 byte digit0 = 2;
@@ -22,8 +20,6 @@ byte segmentG = 6;
 
 void SetupInputs() {
   pinMode(rollButton, INPUT_PULLUP);
-  pinMode(upButton, INPUT_PULLUP);
-  pinMode(downButton, INPUT_PULLUP);
 }
 
 void SetupOutputs() {

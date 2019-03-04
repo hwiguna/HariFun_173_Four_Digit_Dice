@@ -6,8 +6,6 @@
 
 //== Input Pins ==
 byte rollButton = A5;
-byte upButton = A4;
-byte downButton = A3;
 
 //== Four-digit 7-Segment Display ==
 byte digit0 = 2;
@@ -38,13 +36,11 @@ byte charMap[] = {
   B11110110, // 9
 };
 
-volatile unsigned long curValue = 0;
+volatile unsigned long curValue = 1234;
 volatile byte curDigitIndex = 0;
 
 void SetupInputs() {
   pinMode(rollButton, INPUT_PULLUP);
-  pinMode(upButton, INPUT_PULLUP);
-  pinMode(downButton, INPUT_PULLUP);
 }
 
 void SetupOutputs() {
@@ -90,13 +86,16 @@ void CountUpTest() {
     delay(10);
   }
 }
+
+void SetupTimer() {
+  Timer1.initialize(4000); // in microseconds
+  Timer1.attachInterrupt(RefreshDigit);
+}
+
 void setup() {
   SetupInputs();
   SetupOutputs();
-
-  //-- Setup Timer --
-  Timer1.initialize(4000); // in microseconds
-  Timer1.attachInterrupt(RefreshDigit);
+  SetupTimer();
 }
 
 void loop() {

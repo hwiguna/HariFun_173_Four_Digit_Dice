@@ -3,8 +3,6 @@
 
 //== Input Pins ==
 byte rollButton = A5;
-byte upButton = A4;
-byte downButton = A3;
 
 //== Four-digit 7-Segment Display ==
 byte digit0 = 2;
@@ -36,8 +34,6 @@ byte charMap[] = {
 
 void SetupInputs() {
   pinMode(rollButton, INPUT_PULLUP);
-  pinMode(upButton, INPUT_PULLUP);
-  pinMode(downButton, INPUT_PULLUP);
 }
 
 void SetupOutputs() {
@@ -55,7 +51,7 @@ void SetupOutputs() {
   pinMode(segmentG, OUTPUT);
 }
 
-void TestDigit(byte digitPin, byte value) {
+void DisplayDigit(byte digitPin, byte value) {
   digitalWrite(digitPin, HIGH);
 
   for (byte bitIndex=0; bitIndex<7; bitIndex++) { // Note that we only use bits 0-6, NOT 0-7
@@ -68,7 +64,7 @@ void TestDigit(byte digitPin, byte value) {
 
 void TestDigits(byte digitPin) {
   for (byte value=0; value<10; value++) {
-    TestDigit(digitPin, value);
+    DisplayDigit(digitPin, value);
   }
 }
 
@@ -78,7 +74,6 @@ void setup() {
 }
 
 void loop() {
-  //Test7Seg();
   TestDigits(digit0);
   TestDigits(digit1);
   TestDigits(digit2);
