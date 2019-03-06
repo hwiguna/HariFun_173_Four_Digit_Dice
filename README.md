@@ -7,5 +7,3 @@
 ## Schematic
 
 ![Schematic](https://github.com/hwiguna/HariFun_173_Four_Digit_Dice/blob/master/Schematic.PNG "Schematic")
-
-Note that the kit comes with two different motion switches: One has a very sensitive spring, the other a less sensitive ball.  I use the latter for this project.
